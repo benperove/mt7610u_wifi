@@ -4,6 +4,10 @@ Modified for RaspberryPI 3b kernel 4.14.37-v7+ armv7l GNU/Linux
 * modified: include/os/rt_linux.h
 * modified: os/linux/rt_linux.c
 
+Modified again for RaspberryPI 3b kernel >= 4.15 armv7l GNU/Linux (2019-JUL-18)
+* modified: include/os/rt_linux.h
+* modified: os/linux/rt_linux.c
+
 https://benperove.com/compiling-drivers-for-raspberry-pi-edimax-ac450-ew-7711ulc-nano-usb-wifi-adapter/
 
 # how to use

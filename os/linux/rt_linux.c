@@ -114,9 +114,13 @@ static inline VOID __RTMP_OS_Init_Timer(
 	IN PVOID data)
 {
 	if (!timer_pending(pTimer)) {
+#if LINUX_VERSION_CODE < KERNEL_VERSION(4,15,0)
 		init_timer(pTimer);
 		pTimer->data = (unsigned long)data;
 		pTimer->function = function;
+#else
+		timer_setup(pTimer, function, 0);
+#endif
 	}
 }
 
@@ -1083,11 +1087,11 @@ void RtmpOSFileSeek(RTMP_OS_FD osfd, int offset)
 int RtmpOSFileRead(RTMP_OS_FD osfd, char *pDataPtr, int readLen)
 {
 	/* The object must have a read method */
-	if (osfd->f_op && osfd->f_op->read) {
-		return osfd->f_op->read(osfd, pDataPtr, readLen, &osfd->f_pos);
+	if (osfd->f_op) {
+		return __vfs_read(osfd, pDataPtr, readLen, &osfd->f_pos);
 	} else {
 		DBGPRINT(RT_DEBUG_ERROR, ("no file read method, using vfs_read\n"));
-		return kernel_read(osfd, pDataPtr, readLen, &osfd->f_pos);
+		return -1;
 	}
 }
 
